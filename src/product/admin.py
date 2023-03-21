@@ -7,6 +7,10 @@ from .models import (
     ProductVariantPrice,
 )
 # Register your models here.
+class ProductAdmin(admin.ModelAdmin):
+    readonly_fields = ('created_at', 'updated_at')
+
+# admin.site.register(Variant, Product, ProductImage, ProductVariant, ProductVariantPrice)
 
 admin.site.register(Variant)
 admin.site.register(Product)
