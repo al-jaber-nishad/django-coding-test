@@ -28,19 +28,20 @@ class ProductListView(generic.ListView):
 
 def productList(request):
 
-    product_list = Product.objects.all()
+    products = Product.objects.all()
     variants = ProductVariantPrice.objects.all()
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(product_list, 2)
+    paginator = Paginator(products, 2)
     try:
-        products = paginator.page(page)
+        prod_paginator = paginator.page(page)
     except PageNotAnInteger:
-        products = paginator.page(1)
+        prod_paginator = paginator.page(1)
     except EmptyPage:
-        products = paginator.page(paginator.num_pages)
+        prod_paginator = paginator.page(paginator.num_pages)
 
     context = {
+        'prod_paginator': prod_paginator,
         'products': products,
         'variants': variants,
     }

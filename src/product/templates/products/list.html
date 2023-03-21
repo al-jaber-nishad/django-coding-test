@@ -56,24 +56,27 @@
 
                     <tbody>
                     
-                    {% for product in products %}
+                    {% for product in prod_paginator %}
                         <tr>
                             <td>{{forloop.counter}}</td>
-                            <td>{{product.product.title}} <br> Created at: {{product.product.created_at|timesince }} ago</td>
-                            <td>{{product.product.description}}</td>
+                            <td>{{product.title}} <br> Created at: {{product.created_at|timesince }} ago</td>
+                            <td>{{product.description}}</td>
                             <td>
-                                <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
-                                    <dt class="col-sm-3 pb-0">
-                                        {{product.product_variant_one.variant_title}}/{{product.product_variant_two.variant_title}}/{{product.product_variant_three.variant_title}}
-                                    </dt>
-                                    <dd class="col-sm-9">
-                                        <dl class="row mb-0">
-                                            <dd class="col-sm-4 pb-0">Price :{{product.price}}</dd>
-                                            <dd class="col-sm-8 pb-0">InStock :{{product.price}}</dd>
-                                        </dl>
-                                    </dd>
-                                    
-                                </dl>
+                            {% for variant in variants %}
+                                {% if variant.product == product %}
+                                    <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
+                                        <dt class="col-sm-3 pb-0">
+                                            {{variant.product_variant_one.variant_title}}/{{variant.product_variant_two.variant_title}}/{{variant.product_variant_three.variant_title}}
+                                        </dt>
+                                        <dd class="col-sm-9">
+                                            <dl class="row mb-0">
+                                                <dd class="col-sm-4 pb-0">Price :{{variant.price}}</dd>
+                                                <dd class="col-sm-8 pb-0">InStock :{{variant.stock}}</dd>
+                                            </dl>
+                                        </dd>
+                                    </dl> 
+                                {% endif %}
+                            {% endfor %}
                                 <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
                                 </button>
                             </td>
@@ -98,27 +101,27 @@
             <div class="row justify-content-between">
                 <div class="col-md-6">
                     <span class="page-current">
-                        Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} out of {{ page_obj.paginator.count }}
+                        Showing {{ prod_paginator.start_index }} to {{ prod_paginator.end_index }} out of {{ prod_paginator.paginator.count }}
                     </span>
                 </div>
                 <div class="col-md-6 d-flex flex-row-reverse">
-                    {% if is_paginated %}
+                    {% if prod_paginator.has_other_pages %}
                         <ul class="pagination">
-                            {% if page_obj.has_previous %}
-                                <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo;</a></li>
+                            {% if prod_paginator.has_previous %}
+                                <li class="page-item"><a href="?page={{ prod_paginator.previous_page_number }}" class="page-link">&laquo;</a></li>
                             {% else %}
                                 <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
 
                             {% endif %}
-                            {% for i in paginator.page_range %}
-                                {% if page_obj.number == i %}
+                            {% for i in prod_paginator.paginator.page_range %}
+                                {% if prod_paginator.number == i %}
                                     <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
                                 {% else %}
                                     <li class="page-item"><a href="?page={{ i }}" class="page-link">{{ i }}</a></li>
                                 {% endif %}
                             {% endfor %}
-                            {% if page_obj.has_next %}
-                                <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link">&raquo;</a></li>
+                            {% if prod_paginator.has_next %}
+                                <li class="page-item"><a href="?page={{ prod_paginator.next_page_number }}" class="page-link">&raquo;</a></li>
                             {% else %}
                                 <li class="disabled page-item page-link"><span>&raquo;</span></li>
                             {% endif %}
