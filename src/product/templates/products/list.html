@@ -59,33 +59,20 @@
                     {% for product in products %}
                         <tr>
                             <td>{{forloop.counter}}</td>
-                            <td>{{product.title}} <br> Created at: {{product.created_at|timesince }} ago</td>
-                            <td>{{product.description}}</td>
+                            <td>{{product.product.title}} <br> Created at: {{product.product.created_at|timesince }} ago</td>
+                            <td>{{product.product.description}}</td>
                             <td>
                                 <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
                                     <dt class="col-sm-3 pb-0">
-                                        
-                                        {% if variant.product == product %}
-                                            {{variant.variant_title}}
-                                        {% endif %}
-                                            
-                                            
+                                        {{product.product_variant_one.variant_title}}/{{product.product_variant_two.variant_title}}/{{product.product_variant_three.variant_title}}
                                     </dt>
                                     <dd class="col-sm-9">
                                         <dl class="row mb-0">
-                                            <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                            <dd class="col-sm-8 pb-0">InStock : 50.</dd>
+                                            <dd class="col-sm-4 pb-0">Price :{{product.price}}</dd>
+                                            <dd class="col-sm-8 pb-0">InStock :{{product.price}}</dd>
                                         </dl>
                                     </dd>
-                                    <dt class="col-sm-3 pb-0">
-                                        XL/ Black/ Half
-                                    </dt>
-                                    <dd class="col-sm-9">
-                                        <dl class="row mb-0">
-                                            <dd class="col-sm-4 pb-0">Price : 200.0</dd>
-                                            <dd class="col-sm-8 pb-0">InStock : 50.</dd>
-                                        </dl>
-                                    </dd>
+                                    
                                 </dl>
                                 <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
                                 </button>

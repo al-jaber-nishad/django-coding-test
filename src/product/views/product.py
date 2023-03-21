@@ -16,7 +16,7 @@ class CreateProductView(generic.TemplateView):
 
 
 class ProductListView(generic.ListView):
-    model = Product
+    model = ProductVariantPrice
     template_name = 'products/list.html'
     context_object_name = 'products'
     ordering = ['-updated_at']

@@ -29,7 +29,7 @@ class ProductImage(TimeStampMixin):
     
 
     def __str__(self):
-        return self.product
+        return "image"
 
 
 
@@ -55,5 +55,5 @@ class ProductVariantPrice(TimeStampMixin):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     
 
-    def __str__(self):
-        return self.product_variant_one
+    # def __str__(self):
+    #     return self.product
