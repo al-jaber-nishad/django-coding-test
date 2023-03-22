@@ -2,6 +2,8 @@ from django.views import generic
 from django.shortcuts import render, get_object_or_404
 from product.models import Variant, Product, ProductVariant, ProductVariantPrice
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
+from datetime import datetime
 
 
 class CreateProductView(generic.TemplateView):
@@ -15,20 +17,43 @@ class CreateProductView(generic.TemplateView):
         return context
 
 
-class ProductListView(generic.ListView):
-    model = ProductVariantPrice
-    template_name = 'products/list.html'
-    context_object_name = 'products'
-    ordering = ['-updated_at']
-    paginate_by = 2
-
-    # def get_queryset(self):
-    #     user = get_object_or_404(User, username=self.kwargs.get('username'))
-    #     return Post.objects.filter(author=user).order_by('-date_posted')
-
 def productList(request):
+    if request.method == "GET":
 
-    products = Product.objects.all()
+        title = request.GET.get('title', "")
+
+        # variant = request.GET.get('variant', "")
+
+        min_price = request.GET.get('price_from', None)
+        max_price = request.GET.get('price_to', None)
+        date = request.GET.get('date', None)
+
+        print(date)
+        search_datetime = datetime.strptime(date, '%Y-%m-%d')
+
+        print(search_datetime)
+    
+        # queryset = Product.objects.filter(date_field__date=search_datetime.date())
+
+        p_qs = ProductVariantPrice.objects.filter(price__range=(min_price, max_price))
+
+        print(p_qs)
+
+        qs = Product.objects.filter(id__in=p_qs.values('product_id'))
+
+        print(qs)
+
+        # if min_price and max_price:
+        products = Product.objects.filter(
+            Q(title__icontains=title) | Q(
+                created_at__date=search_datetime.date())
+        ).union(
+            Product.objects.filter(id__in=p_qs.values('product_id'))
+        )
+        
+    else:
+        products = Product.objects.all()
+        
     variants = ProductVariantPrice.objects.all()
     page = request.GET.get('page', 1)
 

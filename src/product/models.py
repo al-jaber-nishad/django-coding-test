@@ -20,7 +20,7 @@ class Product(TimeStampMixin):
     description = models.TextField()
     
     def __str__(self):
-        return self.title
+        return self.title + str(self.created_at)
 
 
 class ProductImage(TimeStampMixin):
@@ -40,7 +40,7 @@ class ProductVariant(TimeStampMixin):
     
 
     def __str__(self):
-        return self.variant_title + str(self.updated_at)
+        return self.variant_title
 
 
 class ProductVariantPrice(TimeStampMixin):
