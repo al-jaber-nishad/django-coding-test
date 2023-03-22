@@ -78,6 +78,26 @@ const CreateProduct = (props) => {
     let saveProduct = (event) => {
         event.preventDefault();
         // TODO : write your code here to save the product
+        console.log("hi")
+        let product = {
+            title: this.product_name,
+            sku: this.product_sku,
+            description: this.description,
+            product_image: this.images,
+            product_variant: this.product_variant,
+            product_variant_prices: this.product_variant_prices
+          }
+          
+          console.log(product)
+    
+          axios.post('/product/create', product).then(response => {
+            console.log(response.data);
+          }).catch(error => {
+            console.log(error);
+          })
+    
+          console.log(product);
+        
     }
 
 
@@ -215,8 +235,8 @@ const CreateProduct = (props) => {
                     </div>
                 </div>
 
-                <button type="button" onClick={saveProduct} className="btn btn-lg btn-primary">Save</button>
-                <button type="button" className="btn btn-secondary btn-lg">Cancel</button>
+                <button type="button" onClick={saveProduct} className="btn btn-lg btn-primary mr-3">Save</button>
+                <button type="button" className="btn btn-secondary btn-lg">Cancel22222</button>
             </section>
         </div>
     );

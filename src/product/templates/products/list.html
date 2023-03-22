@@ -17,7 +17,16 @@
                 </div>
                 <div class="col-md-2">
                     <select name="variant" id="" class="form-control">
-                        <option selected disabled>--Select A Variant--</option>
+                        
+                        {% for variant in variants %}
+                            <optgroup label={{variant}}>
+                                {% for product_variant in product_variants %}
+                                    {% if product_variant.variant == variant.id %}
+                                        <option value="volvo">{{product_variant.variant_title}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </optgroup>
+                        {% endfor %}
 
                     </select>
                 </div>
@@ -62,7 +71,7 @@
                             <td>{{product.title}} <br> Created at: {{product.created_at }} ago</td>
                             <td>{{product.description}}</td>
                             <td>
-                            {% for variant in variants %}
+                            {% for variant in variant_prices %}
                                 {% if variant.product == product %}
                                     <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
                                         <dt class="col-sm-3 pb-0">
