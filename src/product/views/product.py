@@ -47,24 +47,18 @@ def productList(request):
 
     if title:
         products = products.filter(Q(title__icontains=title)).distinct()
-        print('title')
 
     if variant:
         products = products.filter(productvariant__variant_title__icontains=variant)
 
     if min_price and max_price:
-        print('min price')
-
         products = products.filter(productvariantprice__price__range=(min_price, max_price))
         print(products)
-        print('after ')
 
     if date:
         search_datetime = datetime.strptime(date, '%Y-%m-%d').date()
-        print(search_datetime)
-        products = products.filter(created_at__date=search_datetime)
+        products = products.filter(created_at__icontains=search_datetime)
 
-    print(products)
         
     variant_prices = ProductVariantPrice.objects.all()
     product_variants = ProductVariant.objects.values('variant_title', 'variant').distinct()
