@@ -32,80 +32,42 @@ class CreateProductView(generic.TemplateView):
         context['variants'] = list(variants.all())
         return context
 
-class SaveProductView(View):
-    def post(self, request):
-        # get form data from POST request
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        sku = request.POST.get('sku')
-        
-        # create a new product instance with the form data
-        product = Product(title=title, description=description, sku=sku)
-        
-        # save the new product instance to the database
-        product.save()
-        
-        # redirect to a success page
-        return HttpResponseRedirect('/')
-
-
-
 def productList(request):
-    if request.method == "GET":
 
-        title = request.GET.get('title', "")
+    title = request.GET.get('title')
+    variant = request.GET.get('variant')
+    min_price = request.GET.get('price_from')
+    max_price = request.GET.get('price_to')
+    date = request.GET.get('date')
+    end_date = request.GET.get('end_date')
 
-        variant = request.GET.get('variant', None)
+    print(min_price, max_price)
 
-        min_price = request.GET.get('price_from', None)
-        max_price = request.GET.get('price_to', None)
-        date = request.GET.get('date', None)
+    products = Product.objects.all()
 
+    if title:
+        products = products.filter(Q(title__icontains=title)).distinct()
+        print('title')
 
-        if min_price and max_price and date:
+    if variant:
+        products = products.filter(productvariant__variant_title__icontains=variant)
 
-            print(date)
-            search_datetime = datetime.strptime(date, '%Y-%m-%d')
+    if min_price and max_price:
+        print('min price')
 
-            print(search_datetime)
-        
-            # queryset = Product.objects.filter(date_field__date=search_datetime.date())
+        products = products.filter(productvariantprice__price__range=(min_price, max_price))
+        print(products)
+        print('after ')
 
-            product_qs = ProductVariantPrice.objects.filter(price__range=(min_price, max_price))
+    if date:
+        search_datetime = datetime.strptime(date, '%Y-%m-%d').date()
+        print(search_datetime)
+        products = products.filter(created_at__date=search_datetime)
 
-            # print(p_qs)
-
-            variant_qs = ProductVariant.objects.filter(variant_title__icontains=variant)
-
-            print("variant:", variant_qs)
-
-
-
-            qs = Product.objects.filter(id__in=product_qs.values('product_id'))
-
-            vs = Product.objects.filter(id__in=variant_qs.values('product_id'))
-
-            print(qs)
-
-            # if min_price and max_price:
-            products = Product.objects.filter(
-                Q(title__icontains=title) | Q(
-                    created_at__date=search_datetime.date())
-            ).union(
-                Product.objects.filter(id__in=product_qs.values('product_id'))
-            ).union(
-                Product.objects.filter(id__in=variant_qs.values('product_id'))
-            )
-        else:
-            products = Product.objects.all()
-
-        
-    else:
-        products = Product.objects.all()
+    print(products)
         
     variant_prices = ProductVariantPrice.objects.all()
     product_variants = ProductVariant.objects.values('variant_title', 'variant').distinct()
-    print(product_variants)
     variants = Variant.objects.all()
 
     page = request.GET.get('page', 1)

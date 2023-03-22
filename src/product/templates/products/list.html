@@ -22,7 +22,7 @@
                             <optgroup label={{variant}}>
                                 {% for product_variant in product_variants %}
                                     {% if product_variant.variant == variant.id %}
-                                        <option value="volvo">{{product_variant.variant_title}}</option>
+                                        <option value={{product_variant.variant_title}}>{{product_variant.variant_title}}</option>
                                     {% endif %}
                                 {% endfor %}
                             </optgroup>
@@ -67,8 +67,8 @@
                     
                     {% for product in prod_paginator %}
                         <tr>
-                            <td>{{forloop.counter}}</td>
-                            <td>{{product.title}} <br> Created at: {{product.created_at }} ago</td>
+                            <td>{{product.id}}</td>
+                            <td>{{product.title}} <br> Created at: {{product.created_at|timesince }} ago</td>
                             <td>{{product.description}}</td>
                             <td>
                             {% for variant in variant_prices %}
